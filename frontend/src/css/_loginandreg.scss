@@ -1,0 +1,49 @@
+.login_registation{
+    width: 100vw;
+    height: 100vh;
+    @include background_img('src/assets/main_bg.jpg');
+    @include flex-center;
+
+    form{
+        @include flex($flcol, $flcenter, $flstart);
+        width: 30%;
+        background-color: rgba($color: #000000, $alpha: 0.4);
+        padding: 50px;
+        border-radius: 10px;
+        gap: 10px;
+
+        h1{
+            width: fit-content;
+            font-size: xx-large;
+            margin-bottom: 20px;
+            color: #41b9f5;
+        }
+
+        label{
+            font-size: large;
+        }
+
+        input{
+            width: 100%;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: large;
+            margin-bottom: 15px;
+            @include input;
+            background-color: rgba($color: #000000, $alpha: 0.3);
+            color: #41b9f5;
+        }
+
+        a{
+            color: #50cda5;
+            &:hover{cursor: pointer;}
+        }
+
+        button{
+            @include input;
+            padding: 20px 50px;
+            font-size: larger;
+            background-image: linear-gradient(to right, #519ae8, #50cda5); /* Gradient */
+        }
+    }
+}

@@ -1,0 +1,48 @@
+@mixin background_img($img){
+    background-image: url($img);
+    background-position: center;
+    background-size: cover;
+}
+
+$flrow : row;
+$flcol: column;
+$flstart: flex-start;
+$flend: flex-end;
+$flcenter: center;
+$flspacebetw: space-between;
+
+@mixin flex-center{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin flex($direct, $justifi, $alighite){
+    display: flex;
+    flex-direction: $direct;
+    justify-content: $justifi;
+    align-items: $alighite;
+}
+
+@mixin panel($width, $height, $radius){
+    width: $width;
+    height: $height;
+    border-radius: $radius;
+}
+
+@mixin test-border{
+    border: 1px solid #ccc;
+}
+
+@mixin gradient-text{
+    background-image: linear-gradient(to right, #519ae8, #47ffc5); /* Gradient */
+    -webkit-background-clip: text; /* Clip để áp dụng gradient lên chữ */
+    color: transparent; /* Màu chữ sẽ bị ẩn, gradient sẽ hiện lên */
+}
+
+@mixin input{
+    outline: none;
+    border: none;
+    font-weight: bold;
+}
