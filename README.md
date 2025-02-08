@@ -1,6 +1,6 @@
-# chatapp
+# Chat App
 
-## technology
+## Technology
 
 frontend: ReactJS
 backend: ExpressJS (NodeJS)
@@ -13,5 +13,6 @@ database: MongoDb
 ![login page](description/login.png)
 ### Registration page
 ![registration page](description/registration.png)
+
 
 
