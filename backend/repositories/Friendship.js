@@ -1,3 +1,4 @@
+const { idIncludes } = require("../helper/mylib");
 const { Friendships } = require("../models/Friendship");
 
 class FriendshipRepository {
@@ -5,38 +6,24 @@ class FriendshipRepository {
         
     }
 
-    handleResponse(result, successMessage, errorMessage) {
-        if (result) {
-            return {
-                data: result,
-                mes: successMessage,
-            };
-        } else {
-            return {
-                data: null,
-                mes: errorMessage,
-            };
-        }
-    }
-
     async create(data) {
         try {
             const newFriendship = new Friendships(data);
             await newFriendship.save();
-            return this.handleResponse(newFriendship, 'Created successful!', 'Created error!');
+            return newFriendship;
         } catch (error) {
-            console.error(error);
-            return this.handleResponse(null, '', 'Created error!');
+            console.log(error);
+            return null;
         }
     }
 
     async delete(id) {
         try {
             const result = await Friendships.deleteOne({ id });
-            return this.handleResponse(result, 'Deleted friendship successfully', 'No friendship deleted');
+            return result;
         } catch (error) {
-            console.error(error);
-            return this.handleResponse(null, '', 'Deleted error!');
+            console.log(error);
+            return null;
         }
     }
 
@@ -47,20 +34,31 @@ class FriendshipRepository {
                 { $set: updateInfo },
                 { new: true }
             );
-            return this.handleResponse(friendship, 'Updated friendship successfully', 'No friendship updated');
+            return friendship;
         } catch (error) {
-            console.error(error);
-            return this.handleResponse(null, '', 'Updated error!');
+            console.log(error);
+            return null;
         }
     }
 
     async get(id) {
         try {
             const friendship = await Friendships.findOne({id});
-            return this.handleResponse(friendship, 'get successful', 'get error')
+            return friendship;
         } catch (error) {
-            console.error(error);
-            return this.handleResponse(null, '', 'get error!');
+            console.log(error);
+            return null;
+        }
+    }
+
+    
+
+    async getRelation(userId){
+        try {
+            const friendship = await Friendships.find({});
+            return friendship.filter(item => idIncludes(item.id, userId));
+        } catch (error) {
+            return null;
         }
     }
 }

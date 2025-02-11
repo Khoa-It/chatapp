@@ -1,4 +1,3 @@
-const { handelResponse } = require("../helper/mylib");
 const { FriendshipRepository } = require("../repositories/Friendship");
 
 class FriendshipController {
@@ -8,28 +7,33 @@ class FriendshipController {
     
     async create(body){
         const {sender_id, status} = body;
-        if( !sender_id || !status) return handelResponse(null, '', 'Missing property');
+        if( !sender_id || !status) return null;
         const res = await this.repository.create(body);
-        return handelResponse(res, 'created successful', 'created error');
+        return res;
     }
 
     async update(id, body){
         const { sender_id, status} = body;
-        if(!id || !sender_id || !status) return handelResponse(null, '', 'Missing property');
+        if(!id || !sender_id || !status) return null; 
         const res = await this.repository.update(id, body);
-        return handelResponse(res, 'update successful', 'update error');
+        return res;
     }
 
     async delete(id){
-        if(!id) return handelResponse(null, '', 'Missing property');
+        if(!id) return null;
         const res = await this.repository.delete(id);
-        return handelResponse(res, 'update successful', 'update error');
+        return res;
     }
 
     async get(id){
-        if(!id) return handelResponse(null, '', 'Missing property');
+        if(!id) return null;
         const res = await this.repository.get(id);
-        return handelResponse(res, 'get successful', 'get error');
+        return res;
+    }
+
+    async getRelations(userId){
+        if (!userId) return null;
+        return await this.repository.getRelation(userId);
     }
 }
 

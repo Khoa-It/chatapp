@@ -1,4 +1,4 @@
-const { handelResponse } = require("../helper/mylib");
+const {  } = require("../helper/mylib");
 const { MessageRepository } = require("../repositories/Message");
 
 class MessageController {
@@ -8,40 +8,39 @@ class MessageController {
     
     async create(body){
         const {room_id, content, sender_id} = body;
-        if(!room_id || !content || !sender_id) return handelResponse(null, '', 'Missing property');
-        const res = await this.repository.create(body);
-        return handelResponse(res, 'created successful', 'created error');
+        if(!room_id || !content || !sender_id) return null;
+        return await this.repository.create(body);
     }
 
     async update(id, body){
         const {room_id, content, sender_id} = body;
-        if(!id || !room_id || !content || !sender_id) return handelResponse(null, '', 'Missing property');
-        const res = await this.repository.update(id, body);
-        return handelResponse(res, 'update successful', 'update error');
+        if(!id || !room_id || !content || !sender_id) return null;
+        return await this.repository.update(id, body);
     }
 
     async delete(id){
-        if(!id) return handelResponse(null, '', 'Missing property');
-        const res = await this.repository.delete(id);
-        return handelResponse(res, 'update successful', 'update error');
+        if(!id) return null;
+        return await this.repository.delete(id);
     }
 
     async get(id){
-        if(!id) return handelResponse(null, '', 'Missing property');
-        const res = await this.repository.get(id);
-        return handelResponse(res, 'get successful', 'get error');
+        if(!id) return null;
+        return await this.repository.get(id);
     }
 
     async getByRoom(room_id){
-        if(!room_id) return handelResponse(null, '', 'Missing property');
-        const res = await this.repository.getByRoom(room_id);
-        return handelResponse(res, 'get successful', 'get error');
+        if(!room_id) return null;
+        return await this.repository.getByRoom(room_id);
     }
 
     async deleteByRoom(room_id){
-        if(!room_id) return handelResponse(null, '', 'Missing property');
-        const res = await this.repository.deleteByRoomId(room_id);
-        return handelResponse(res, 'delete successful', 'delete error');
+        if(!room_id) return null;
+        return await this.repository.deleteByRoomId(room_id);
+    }
+
+    async getAllRoom(userId){
+        if(!userId) return null;
+        return await this.repository.getAllRoomWithUserId(userId);        
     }
 }
 

@@ -8,18 +8,19 @@ class UserRepository {
         try {
             const newUser = new Users(data);
             await newUser.save();
-            return handelResponse(newUser, 'Created successful!', 'Created error!');
+            return newUser;
         } catch (error) {
-            return handelResponse(null, '', 'Created error!');
+            return null;
         }
     }
 
     async delete(id) {
         try {
             const result = await Users.deleteOne({ id });
-            return handelResponse(result, 'Deleted user successfully', 'No user deleted');
+            return result;
         } catch (error) {
-            return handelResponse(null, '', 'Deleted error!');
+            console.log(error);
+            return null;
         }
     }
 
@@ -30,27 +31,47 @@ class UserRepository {
                 { $set: updateInfo },
                 { new: true }
             );
-            return handelResponse(user, 'Updated user successfully', 'No user updated');
+            return user;
         } catch (error) {
-            return handelResponse(null, '', 'Updated error!');
+            console.log(error);
+            return null;
         }
     }
 
     async getByEmailAndPassword(param) {
         try {
             const user = await Users.findOne(param);
-            return handelResponse(user, 'Get user successful', 'User does not exist!');
+            return user;
         } catch (error) {
-            return handelResponse(null, '', 'Get user error!');
+            console.log(error);
+            return null;
         }
     }
 
     async getByEmail(email) {
         try {
             const user = await Users.findOne({ email });
-            return handelResponse(user, 'Get user successful', 'User does not exist!');
+            return user;
         } catch (error) {
-            return handelResponse(null, '', 'Get user error!');
+            console.log(error);
+            return null;
+        }
+    }
+
+    async getListUserById(arrId) {
+        try {
+            return await Users.find({id: {$in: arrId}});
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+
+    async getAll(){
+        try {
+            return await Users.find({});
+        } catch (error) {
+            return null;
         }
     }
 }

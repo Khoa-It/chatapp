@@ -28,4 +28,10 @@ friendshipRouter.delete('/:id', async (req, res)=> {
     return response(res, data);
 })
 
+friendshipRouter.get('/relationships/:userId', async (req, res)=> {
+    const {userId} = req.params;
+    const data = await controller.getRelations(userId);
+    return response(res, data);
+})
+
 module.exports = {friendshipRouter};

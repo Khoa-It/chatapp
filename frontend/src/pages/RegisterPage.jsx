@@ -35,7 +35,7 @@ export default function RegisterPage() {
             <label htmlFor="">Password</label>
             <input type="password" onChange={(e)=>setPassword(e.target.value)}/>
             <label htmlFor="">If you don't have account ? <Link to={'/'}>Login</Link></label>
-            <button onClick={(e)=>handle(e)}>Register</button>
+            <button onClick={(e)=>handle(e)}>Sign up</button>
         </form>
     </div>
   )

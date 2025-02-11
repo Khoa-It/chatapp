@@ -1,8 +1,12 @@
-function handelResponse (data, successMessage, errorMessage){
+function handelResponse (param, successMessage, errorMessage){
     return {
-        data: data,
-        mes: data ? successMessage : errorMessage,
+        data: param.data,
+        mes: param.data ? successMessage : errorMessage,
     }
 }
 
-module.exports = {handelResponse};
+function idIncludes(db_id = "", id = 2){
+    return db_id.startsWith(`${id}#`) || db_id.endsWith(`#${id}`);
+}
+
+module.exports = {handelResponse, idIncludes};

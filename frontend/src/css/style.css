@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   margin: 0;
   padding: 0;
@@ -42,6 +43,18 @@ img:hover {
 }
 .message-panel-friends h1 {
   font-size: xx-large;
+  background-image: linear-gradient(to right, #519ae8, #47ffc5); /* Gradient */
+  -webkit-background-clip: text; /* Clip để áp dụng gradient lên chữ */
+  color: transparent; /* Màu chữ sẽ bị ẩn, gradient sẽ hiện lên */
+}
+.message-panel-friends-hello {
+  color: #7bd595;
+  font-weight: bold;
+}
+.message-panel-friends-findbtn {
+  font-weight: bold;
+  background-color: rgb(79, 192, 245);
+  color: white;
 }
 .message-panel-friends-items {
   width: 100%;
@@ -65,6 +78,7 @@ img:hover {
 }
 .message-panel-friends-items-item p {
   font-weight: bold;
+  color: white;
 }
 .message-panel-friends-items-item.active {
   background: linear-gradient(to right, rgba(131, 96, 195, 0.5), rgba(46, 191, 145, 0.5));
@@ -81,7 +95,7 @@ img:hover {
   width: fit-content;
   padding: 10px 20px;
   border-radius: 5px;
-  background-color: rgba(225, 225, 225, 0.3);
+  background-color: #e1e1e1;
   gap: 10px;
 }
 .message-panel-friends-logout img {
@@ -125,6 +139,7 @@ img:hover {
 .message-panel-messages-user-info p {
   font-weight: bold;
   font-size: larger;
+  color: rgb(81, 189, 247);
 }
 .message-panel-messages-user-action {
   display: flex;
@@ -160,10 +175,12 @@ img:hover {
 }
 .message-panel-messages-content-other {
   background-color: #a4a4a4;
+  color: white;
 }
 .message-panel-messages-content-owner {
   background-color: rgb(54, 182, 240);
   align-self: flex-end;
+  color: white;
 }
 .message-panel-messages-input {
   height: 10%;
@@ -179,6 +196,7 @@ img:hover {
   height: 30px;
 }
 .message-panel-messages-input input {
+  color: white;
   flex: 1;
   font-size: larger;
   padding: 15px;
@@ -218,6 +236,7 @@ img:hover {
   color: #41b9f5;
 }
 .login_registation form label {
+  color: #ccc;
   font-size: large;
 }
 .login_registation form input {
@@ -243,6 +262,79 @@ img:hover {
   border: none;
   font-weight: bold;
   padding: 20px 50px;
+  color: white;
   font-size: larger;
   background-image: linear-gradient(to right, #519ae8, #50cda5); /* Gradient */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.overlay .others {
+  position: relative;
+  width: 50%;
+  height: 70%;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  padding: 40px;
+}
+.overlay .others h1 {
+  background-image: linear-gradient(to right, #519ae8, #47ffc5); /* Gradient */
+  -webkit-background-clip: text; /* Clip để áp dụng gradient lên chữ */
+  color: transparent; /* Màu chữ sẽ bị ẩn, gradient sẽ hiện lên */
+  margin-bottom: 30px;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.overlay .others .scroll-bar {
+  width: 100%;
+  height: 80%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+}
+.overlay .others-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+  color: white;
+  font-weight: bold;
+}
+.overlay .others-item img {
+  display: block;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+.overlay .others-item-send {
+  background-color: #58e5bb;
+  color: #ffffff;
+}
+.overlay .others-item-add {
+  color: #5fa4f8;
+}
+.overlay .others-item-accept {
+  background-color: #5fa4f8;
+  color: white;
+}
+.overlay .others-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 30px;
+  height: 30px;
 }/*# sourceMappingURL=style.css.map */

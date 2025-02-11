@@ -1,10 +1,8 @@
-const response = (res, param, statusCode = 200) => {
-    const {mes, data} = param;
+const response = (res, data, statusCode = 200) => {    
     const stat = data != null ? 'success' : 'error';
     return res.status(statusCode).json({
         status: stat,
-        data: data,
-        message: mes,
+        data,
     });
 }
 

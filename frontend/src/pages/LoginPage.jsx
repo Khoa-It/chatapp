@@ -34,7 +34,7 @@ export default function LoginPage() {
             <label htmlFor="">Password</label>
             <input type="password" onChange={(e)=> setPassword(e.target.value)} />
             <label htmlFor="">If you don't have account ? <Link to={'/registration'}>Registration</Link></label>
-            <button onClick={(e)=>login(e)}>Login</button>
+            <button onClick={(e)=>login(e)}>Sign in</button>
         </form>
     </div>
   )

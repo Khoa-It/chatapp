@@ -1,4 +1,4 @@
-const { handelResponse } = require("../helper/mylib");
+const {  } = require("../helper/mylib");
 const { Messages } = require("../models/Message");
 
 class MessageRepository {
@@ -10,20 +10,20 @@ class MessageRepository {
         try {
             const newMessage = new Messages(data);
             await newMessage.save();
-            return handelResponse(newMessage, 'Created successful!', 'Created error!');
+            return newMessage;
         } catch (error) {
-            console.error(error);
-            return handelResponse(null, '', 'Created error!');
+            console.log(error);
+            return null;
         }
     }
 
     async delete(id) {
         try {
             const result = await Messages.deleteOne({ _id: id });
-            return handelResponse(result, 'Deleted message successfully', 'No message deleted');
+            return result;
         } catch (error) {
-            console.error(error);
-            return handelResponse(null, '', 'Deleted error!');
+            console.log(error);
+            return null;
         }
     }
 
@@ -34,39 +34,50 @@ class MessageRepository {
                 { $set: updateInfo },
                 { new: true }
             );
-            return handelResponse(message, 'Updated message successfully', 'No message updated');
+            return message;
         } catch (error) {
-            console.error(error);
-            return handelResponse(null, '', 'Updated error!');
+            console.log(error);
+            return null;
         }
     }
 
     async get(id) {
         try {
             const messages = await Messages.findOne({id});
-            return handelResponse(messages, 'get successful', 'get error')
+            return messages;
         } catch (error) {
-            console.error(error);
-            return handelResponse(null, '', 'get error!');
+            console.log(error);
+            return null;
         }
     }
     async getByRoom(room_id){
         try {
             const messages = await Messages.findOne({room_id});
-            return handelResponse(messages, 'get list messages success', 'get error message');
+            return messages;
         } catch (error) {
-            console.error(error);
-            return handelResponse(null, '', 'get error');
+            console.log(error);
+            return null;
         }
     }
 
     async deleteByRoomId(room_id){
         try {
             const result = await Messages.deleteMany({room_id});
-            return handelResponse(result, 'Perform successful', 'Perform error');
+            return result;
         } catch (error) {
-            console.error(error);
-            return handelResponse(null, '', 'Have error');
+            console.log(error);
+            return null;
+        }
+    }
+
+    async getAllRoomWithUserId(userId){
+        try {
+            let result = await Messages.find({});
+            result = result.filter(item => item.room_id.includes(userId));
+            return result;
+        } catch (error) {
+            console.log(error);
+            return null;
         }
     }
 

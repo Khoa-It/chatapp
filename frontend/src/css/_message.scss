@@ -18,7 +18,16 @@
             padding: 15px 20px;
             h1{
                 font-size: xx-large;
-                
+                @include gradient-text;
+            }
+            &-hello{
+                color: #7bd595;
+                font-weight: bold;
+            }
+            &-findbtn{
+                font-weight: bold;
+                background-color: rgb(79, 192, 245);
+                color: white;
             }
             &-items{
                 width: 100%;
@@ -39,6 +48,7 @@
                     }
                     p{
                         font-weight: bold;
+                        color: white;
                     }
     
                     &.active{
@@ -54,7 +64,7 @@
                 width: fit-content;
                 padding: 10px 20px;
                 border-radius: 5px;
-                background-color: rgba($color: #e1e1e1, $alpha: 0.3);
+                background-color: rgba($color: #e1e1e1, $alpha: 1);
                 img{width: 25px; height: 25px;}
                 gap: 10px;
                 p{
@@ -88,6 +98,7 @@
                     p{
                         font-weight: bold;
                         font-size: larger;
+                        color: rgb(81, 189, 247);
                     }
                 }
 
@@ -121,11 +132,13 @@
 
                 &-other{
                     background-color: #a4a4a4;
+                    color: white;
                 }
 
                 &-owner{
                     background-color: rgb(54, 182, 240);
                     align-self: flex-end;
+                    color: white;
                 }
             }
 
@@ -139,6 +152,7 @@
                     height: 30px;
                 }
                 input{
+                    color: white;
                     flex: 1;
                     font-size: larger;
                     padding: 15px;

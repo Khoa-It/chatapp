@@ -1,0 +1,8 @@
+const userIds = [2, 3]; // Mảng ID user
+User.find({ id: { $in: userIds } }) // Truy vấn lấy danh sách user có ID trong mảng
+  .then(users => {
+    console.log(users);
+  })
+  .catch(error => {
+    console.error(error);
+  });

@@ -29,3 +29,22 @@ export async function registration(params) {
         return errorAlert;
     }
 }
+
+export async function getOthers(params) {
+    try {
+        const result = await axios.post(`${url}/others`, {arrId: params});
+        console.log(result);
+        return result.data;
+    } catch (error) {
+        return errorAlert;
+    }
+}
+
+export async function getAllUser(params) {
+    try {
+        const result = await axios.get(`${url}/all`);
+        return result.data;
+    } catch (error) {
+        return errorAlert;
+    }
+}

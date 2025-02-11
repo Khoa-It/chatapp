@@ -27,4 +27,18 @@ userRouter.post('/login', async (req,res) => {
     return response(res,data);
 })
 
+userRouter.post('/others', async (req, res) => {
+    const arrId = req.body.arrId;
+    if (!arrId || !Array.isArray(arrId)) {
+        return response(res, null);
+    }
+    const data = await userController.getListUserById(arrId);
+    return response(res, data);
+})
+
+userRouter.get('/all', async (req, res) => {
+    const data = await userController.getAll();
+    return response(res, data);
+})
+
 module.exports = {userRouter};

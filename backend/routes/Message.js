@@ -22,6 +22,12 @@ messageRouter.get('/:room_id', async (req,res) => {
     return response(res,data);
 })
 
+messageRouter.get('/all/:userid', async (req,res) => {
+    const {userid} = req.params;
+    const data = await controller.getAllRoom(userid);
+    return response(res,data);
+})
+
 messageRouter.delete('/:id', async (req,res) => {
     const {id} = req.params;
     const data = await controller.delete(id);

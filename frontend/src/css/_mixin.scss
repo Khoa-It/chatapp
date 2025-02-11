@@ -46,3 +46,9 @@ $flspacebetw: space-between;
     border: none;
     font-weight: bold;
 }
+
+@mixin scroll($wid, $hei){
+    width: $wid;
+    height: $hei;
+    overflow-y: scroll;
+}
