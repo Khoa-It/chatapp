@@ -10,7 +10,6 @@ const errorAlert = {
 
 export async function getByEmailAndPassword(param) {
     try {
-        console.log(param);
         const result = await axios.post(`${url}/login`, param);
         return result.data;
     } catch (error) {
@@ -33,7 +32,6 @@ export async function registration(params) {
 export async function getOthers(params) {
     try {
         const result = await axios.post(`${url}/others`, {arrId: params});
-        console.log(result);
         return result.data;
     } catch (error) {
         return errorAlert;

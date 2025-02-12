@@ -44,15 +44,37 @@ export default function Friends() {
         return db_id.startsWith(`${id}#`) || db_id.endsWith(`#${id}`);
     }
 
+    const idCreate = (a, b) => {
+       return a < b ? `${a}#${b}` : `${b}#${a}`;
+    }
+
     const handleOtherData = async () => {
         let responseApi, handleData;
+        let mapping = {};
+        // get all user data
         responseApi = await getAllUser();
         handleData = responseApi.data;
-        for (const element of handleData) {
-            element.nofriend = true;
-            element.accept = false;
+        handleData = handleData.filter(item => item.id != user.id);
+
+        // build mapping used for relation data with other user data
+        for (let i = 0; i < handleData.length; i++) {
+            const element = handleData[i];
+            element.sender_id = -1;
+            element.status = "";
+            mapping[idCreate(element.id, user.id)] = i;
         }
+
+        // get relation between other with current user
         responseApi = await getRelationShip(user.id);
+        responseApi = responseApi.data;
+        
+        for (const element of responseApi) {
+            const index = mapping[element.id];
+            handleData[index].sender_id = element.sender_id;
+            handleData[index].status = element.status;
+        }
+        console.log(handleData);
+
         setOthersData(()=> handleData);
     }
 
@@ -113,8 +135,8 @@ export default function Friends() {
                             <img src="/src/assets/nullavartar.jpg" alt="" />
                             <p>{item.username}</p>
                             <button className='others-item-send'>Send</button>
-                            <button className='others-item-add'>Add friend</button>
-                            <button className='others-item-accept'>Accept</button>
+                            {item.sender_id == -1 && <button className='others-item-add'>Add friend</button>}
+                            {item.sender_id != user.id && item.status != "accepted" && item.status != "" && <button className='others-item-accept'>Accept</button>}
                         </div>
                     ))}
                 </div>
