@@ -1,16 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../api/AppContext';
 import { useNavigate } from 'react-router-dom';
-import { getAllMessage } from '../api/message';
+import { castResponseToArray, getAllMessage, getMessageByRoomId } from '../api/message';
 import { getAllUser, getOthers } from '../api/user';
 import { getRelationShip } from '../api/friendship';
 
 export default function Friends() {
     const [friends, setFriends] = useState(null);
     const [selectedItem, setSelectedItem] = useState(null);
-    const {user, setUser, messages, setMessages} = useContext(AppContext);
+    const {user, setUser, messages, setMessages, contactUser, setContactUser} = useContext(AppContext);
     const [othersWindow, setOthersWindow] = useState(false);
     const [othersData, setOthersData] = useState(null);
+    const [mappingUst, setMappingUst] = useState(null);
+
     const navigate = useNavigate();
 
     const testData = [{
@@ -25,19 +27,20 @@ export default function Friends() {
     } 
     ];
 
-
-
-    const getFriends = async (data=[{room_id:'1#2'}]) => {
+    const handleFriendData = async (data=[{room_id:'1#2'}]) => {
         let responseApi;
         let otherIds = [];
         for (const element of data) {
             const arrId = element.room_id.split('#');
             const otherId = arrId[0] == user.id ? arrId[1] : arrId[0];
+            if (otherIds.includes(otherId)) continue;
             otherIds.push(otherId);
         }
         otherIds = otherIds.map(id => parseInt(id, 10));
         responseApi = await getOthers(otherIds);
-        setFriends(()=> responseApi.data);
+        responseApi = responseApi.data;
+        responseApi = castResponseToArray(responseApi);
+        setFriends(()=> responseApi);
     }
 
     const idIncludes = (db_id = "", id = 2) => {
@@ -76,14 +79,18 @@ export default function Friends() {
         console.log(handleData);
 
         setOthersData(()=> handleData);
+        setMappingUst(()=> mapping);
     }
 
     useEffect(() => {
         const fetchData = async () =>{
             try {
                 if (!user) navigate('/');
-                const messages = await getAllMessage(user.id);
-                getFriends(testData);
+                let handleRelation = await getAllMessage(user.id);
+                handleRelation = handleRelation.data;
+                handleRelation = castResponseToArray(handleRelation);
+                console.log(handleRelation);
+                handleFriendData(handleRelation);
                 handleOtherData();
             } catch (error) {
                 console.log(error);
@@ -100,17 +107,28 @@ export default function Friends() {
       return classname;
     }
 
+    const handleMenuEvent = async (id) => {
+        const index = mappingUst[idCreate(user.id, id)];
+        setSelectedItem(() => id);
+
+        let responseApi = await getMessageByRoomId(idCreate(user.id, id));
+        responseApi = responseApi.data;
+        responseApi = castResponseToArray(responseApi);
+        setMessages(()=> responseApi);
+        setContactUser(()=> othersData[index]);
+    }
+
 
   return (
     <>
         <div className='message-panel-friends'>
             <h1>Messages</h1>
-            <p className='message-panel-friends-hello'>Hello {user.username} 👋</p>
+            <p className='message-panel-friends-hello'>Hello {user && user.username} 👋</p>
             <button className='message-panel-friends-findbtn' onClick={()=> setOthersWindow(()=>true)}>Find</button>
 
             <div className="message-panel-friends-items">
                 { friends && friends.map(item => (
-                    <div key={item.id} className={handleClassName(item.id)} onClick={()=> setSelectedItem(item.id)} >
+                    <div key={item.id} className={handleClassName(item.id)} onClick={()=> handleMenuEvent(item.id)} >
                         <img src="/src/assets/nullavartar.jpg" alt="" />
                         <p>{item.username}</p>
                     </div>

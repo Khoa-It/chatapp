@@ -17,3 +17,18 @@ export async function getAllMessage(id) {
         return errorAlert;
     }   
 }
+
+export function castResponseToArray (data){
+    if(data == null) data = [];
+    return Array.isArray(data) ? data : [data];
+}
+
+export async function getMessageByRoomId(room_id) {
+    try {        
+        const handleUrl = `${url}/${encodeURIComponent(room_id)}`;
+        const res = await axios.get(handleUrl); 
+        return res.data;
+    } catch (error) {
+        return errorAlert;
+    }
+}

@@ -52,7 +52,7 @@ class MessageRepository {
     }
     async getByRoom(room_id){
         try {
-            const messages = await Messages.findOne({room_id});
+            const messages = await Messages.find({room_id});
             return messages;
         } catch (error) {
             console.log(error);
