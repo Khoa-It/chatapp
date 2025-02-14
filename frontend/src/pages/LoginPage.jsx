@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getByEmailAndPassword } from '../api/user';
 import { AppContext } from '../api/AppContext';
@@ -9,6 +9,12 @@ export default function LoginPage() {
   const {user, setUser} = useContext(AppContext);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) navigate('/chat');
+  }, [])
+  
+
   const login = async (e) => {
     e.preventDefault();
     if (!password || !email) {
@@ -18,6 +24,7 @@ export default function LoginPage() {
     const res = await getByEmailAndPassword({email, password});
     if (res.data != null) {
       setUser(() => res.data);
+      localStorage.setItem('user', JSON.stringify(res.data));
       navigate('/chat');
     }else{
       alert('Login failed');

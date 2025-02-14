@@ -8,7 +8,7 @@ const errorAlert = {
     message: 'call api error - frondend',
 }
 
-export async function getAllMessage(id) {
+export async function apiGetAllMessage(id) {
     try {
         const res = await axios.get(`${url}/all/${id}`);
         return res.data;
@@ -23,10 +23,19 @@ export function castResponseToArray (data){
     return Array.isArray(data) ? data : [data];
 }
 
-export async function getMessageByRoomId(room_id) {
+export async function apiGetMessageByRoomId(room_id) {
     try {        
         const handleUrl = `${url}/${encodeURIComponent(room_id)}`;
         const res = await axios.get(handleUrl); 
+        return res.data;
+    } catch (error) {
+        return errorAlert;
+    }
+}
+
+export async function apiSendMessage(params) {
+    try {
+        const res = await axios.post(url, params);
         return res.data;
     } catch (error) {
         return errorAlert;

@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../api/AppContext';
 import { useNavigate } from 'react-router-dom';
-import { castResponseToArray, getAllMessage, getMessageByRoomId } from '../api/message';
+import { castResponseToArray, apiGetAllMessage, apiGetMessageByRoomId } from '../api/message';
 import { getAllUser, getOthers } from '../api/user';
 import { getRelationShip } from '../api/friendship';
+import { formToJSON } from 'axios';
 
 export default function Friends() {
     const [friends, setFriends] = useState(null);
@@ -27,7 +28,34 @@ export default function Friends() {
     } 
     ];
 
-    const handleFriendData = async (data=[{room_id:'1#2'}]) => {
+    const idIncludes = (db_id = "", id = 2) => {
+        return db_id.startsWith(`${id}#`) || db_id.endsWith(`#${id}`);
+    }
+
+    const idCreate = (a, b) => {
+       return a < b ? `${a}#${b}` : `${b}#${a}`;
+    }
+
+    const addContact = async (id) => {
+        // add other person for left menu
+        for (const element of friends){
+            if (element.id == id){
+                setSelectedItem(()=> id);
+                setOthersWindow(()=> false);
+                await handleMenuEvent(id);
+                return;
+            }
+        }
+        const index = mappingUst[idCreate(id, user.id)];
+        const item = othersData[index];
+        setFriends(()=> [...friends, item]);
+        
+        // active click event
+        setOthersWindow(()=> false);
+        await handleMenuEvent(id);
+    }
+
+    const handleRecentContactData = async (data=[{room_id:'1#2'}]) => {
         let responseApi;
         let otherIds = [];
         for (const element of data) {
@@ -39,19 +67,11 @@ export default function Friends() {
         otherIds = otherIds.map(id => parseInt(id, 10));
         responseApi = await getOthers(otherIds);
         responseApi = responseApi.data;
-        responseApi = castResponseToArray(responseApi);
+        responseApi = castResponseToArray(responseApi);        
         setFriends(()=> responseApi);
     }
 
-    const idIncludes = (db_id = "", id = 2) => {
-        return db_id.startsWith(`${id}#`) || db_id.endsWith(`#${id}`);
-    }
-
-    const idCreate = (a, b) => {
-       return a < b ? `${a}#${b}` : `${b}#${a}`;
-    }
-
-    const handleOtherData = async () => {
+    const handleOtherContactData = async () => {
         let responseApi, handleData;
         let mapping = {};
         // get all user data
@@ -76,7 +96,6 @@ export default function Friends() {
             handleData[index].sender_id = element.sender_id;
             handleData[index].status = element.status;
         }
-        console.log(handleData);
 
         setOthersData(()=> handleData);
         setMappingUst(()=> mapping);
@@ -85,13 +104,18 @@ export default function Friends() {
     useEffect(() => {
         const fetchData = async () =>{
             try {
-                if (!user) navigate('/');
-                let handleRelation = await getAllMessage(user.id);
+                if (!user) {
+                    const data = localStorage.getItem('user');
+                    setUser(JSON.parse(data))
+                    if(!user) navigate('/');
+                }
+                console.log(user);
+                
+                let handleRelation = await apiGetAllMessage(user.id);
                 handleRelation = handleRelation.data;
                 handleRelation = castResponseToArray(handleRelation);
-                console.log(handleRelation);
-                handleFriendData(handleRelation);
-                handleOtherData();
+                handleRecentContactData(handleRelation);
+                handleOtherContactData();
             } catch (error) {
                 console.log(error);
                 navigate('/');
@@ -111,11 +135,17 @@ export default function Friends() {
         const index = mappingUst[idCreate(user.id, id)];
         setSelectedItem(() => id);
 
-        let responseApi = await getMessageByRoomId(idCreate(user.id, id));
+        let responseApi = await apiGetMessageByRoomId(idCreate(user.id, id));
         responseApi = responseApi.data;
         responseApi = castResponseToArray(responseApi);
         setMessages(()=> responseApi);
         setContactUser(()=> othersData[index]);
+    }
+
+    const handleLogout = () => {
+        setUser(null);
+        localStorage.removeItem('user');
+        navigate('/');
     }
 
 
@@ -135,7 +165,7 @@ export default function Friends() {
                 )) }
             </div>
             
-            <div className="message-panel-friends-logout" onClick={()=> navigate('/')}>
+            <div className="message-panel-friends-logout" onClick={()=> handleLogout()}>
                 <p>logout</p>
                 <img src="src/assets/icons8-logout-50.png" alt="" />
             </div>
@@ -149,10 +179,10 @@ export default function Friends() {
 
                 <div className='scroll-bar'>
                     {othersData && othersData.map(item => (
-                        <div className="others-item" >
+                        <div className="others-item" key={item._id}  >
                             <img src="/src/assets/nullavartar.jpg" alt="" />
                             <p>{item.username}</p>
-                            <button className='others-item-send'>Send</button>
+                            <button className='others-item-send' onClick={()=> addContact(item.id)}>Send</button>
                             {item.sender_id == -1 && <button className='others-item-add'>Add friend</button>}
                             {item.sender_id != user.id && item.status != "accepted" && item.status != "" && <button className='others-item-accept'>Accept</button>}
                         </div>
