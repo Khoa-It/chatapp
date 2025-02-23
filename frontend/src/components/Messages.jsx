@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { AppContext } from '../api/AppContext'
 import { useNavigate } from 'react-router-dom';
 import { apiGetAllMessage, apiSendMessage } from '../api/message';
@@ -12,6 +12,12 @@ export default function Messages() {
     const navigate = useNavigate();
     const [messageInputValue , setMessageInputValue] = useState('');
     const [image, setImage] = useState(null);
+    const endElement = useRef(null);
+
+    const scrollToBottom = () => {
+        endElement.current?.scrollIntoView({ behavior: "smooth" });
+    };
+    
     
     const schemaMessage = (room_id, content, sender_id) => {
         if (!room_id || !content || !sender_id) return null;
@@ -64,10 +70,10 @@ export default function Messages() {
     }
 
     const handleUploadImage = async () => {
+        setLoadding(()=>true);
         const formData = new FormData();
         formData.append("file", image);
         try {
-            setLoadding(true);
             const response = await axios.post("http://localhost:3001/upload", formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
@@ -84,11 +90,11 @@ export default function Messages() {
             const {url} = response.data;
             await handleSendMessageWithContent(url);
             setImage(null);
-            setLoadding(false);
+            setLoadding(()=>false);
 
         } catch (error) {
             setImage(null);
-            setLoadding(false);
+            setLoadding(()=>false);
             alert("Upload thất bại!");
         }
     }
@@ -113,6 +119,11 @@ export default function Messages() {
             socket.off('connect');
         };
     }, [])
+
+    useEffect(() => {
+      scrollToBottom();
+    }, [messages])
+    
     
 
   return (
@@ -137,6 +148,8 @@ export default function Messages() {
                     ) : (
                         item.content
                     )}
+
+                    <div ref={endElement}/>
                 </div>
             ))}
         </div>
