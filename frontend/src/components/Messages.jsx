@@ -3,13 +3,15 @@ import { AppContext } from '../api/AppContext'
 import { useNavigate } from 'react-router-dom';
 import { apiGetAllMessage, apiSendMessage } from '../api/message';
 import { io } from 'socket.io-client';
+import axios from 'axios';
 
 const socket = io('http://localhost:3000');
 
 export default function Messages() {
-    const {messages, setMessages, contactUser, setContactUser, user, setUser} = useContext(AppContext);
+    const {messages, setMessages, contactUser, setContactUser, user, setUser, loadding, setLoadding} = useContext(AppContext);
     const navigate = useNavigate();
     const [messageInputValue , setMessageInputValue] = useState('');
+    const [image, setImage] = useState(null);
     
     const schemaMessage = (room_id, content, sender_id) => {
         if (!room_id || !content || !sender_id) return null;
@@ -26,21 +28,25 @@ export default function Messages() {
        return `${className}-other`;
     }
 
+    const handleSendMessageWithContent = async (content) => {
+        const room_id = idCreate(contactUser.id, user.id);
+        const message = schemaMessage(room_id, content, user.id);
+        let responseApi = await apiSendMessage(message);
+        responseApi = responseApi.data;
+        if(!responseApi) return;
+        setMessages(()=> [...messages,responseApi]); 
+        const payLoad = {
+            ...responseApi,
+            receiver_id: contactUser.id,
+        }
+        socket.emit('messageFromClient', payLoad);
+    }
 
-    const handleSendMessage = async (event) => {
+    const handleSendMessageAndImage = async (event) => {
         if (event.key === 'Enter') {
+            if(image) await handleUploadImage();
             if(!messageInputValue) return;
-            const room_id = idCreate(contactUser.id, user.id);
-            const message = schemaMessage(room_id, messageInputValue, user.id);
-            let responseApi = await apiSendMessage(message);
-            responseApi = responseApi.data;
-            if(!responseApi) return;
-            setMessages(()=> [...messages,responseApi]); 
-            const payLoad = {
-                ...responseApi,
-                receiver_id: contactUser.id,
-            }
-            socket.emit('messageFromClient', payLoad);
+            handleSendMessageWithContent(messageInputValue);
             setMessageInputValue('');
         }
     }
@@ -52,6 +58,44 @@ export default function Messages() {
     const checkNullData = () => {
        if(!user) navigate('/');
     }
+
+    const handleImageSeleted = (event) => {
+        setImage(()=> event.target.files[0]);
+    }
+
+    const handleUploadImage = async () => {
+        const formData = new FormData();
+        formData.append("file", image);
+        try {
+            setLoadding(true);
+            const response = await axios.post("http://localhost:3001/upload", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+            // {
+            //     filename: "file-1739897499183.jpg"
+            //     message: "File đã nhận thành công!"
+            //     mimetype: "image/jpeg"
+            //     path: "uploads/file-1739897499183.jpg"
+            //     success: true
+            //     url: "https://lh3.googleusercontent.com/d/1EBktmr9DOloefmGUq9d8p3gSf5TE-U7d=s220"
+            //     webContentLink: "https://drive.google.com/uc?id=1EBktmr9DOloefmGUq9d8p3gSf5TE-U7d&export=download"
+            //     webViewLink: "https://drive.google.com/file/d/1EBktmr9DOloefmGUq9d8p3gSf5TE-U7d/view?usp=drivesdk"
+            // }
+            const {url} = response.data;
+            await handleSendMessageWithContent(url);
+            setImage(null);
+            setLoadding(false);
+
+        } catch (error) {
+            setImage(null);
+            setLoadding(false);
+            alert("Upload thất bại!");
+        }
+    }
+
+    const isGoogleDriveImage = (url) => {
+        return url.startsWith("https://lh3.googleusercontent.com/d/") || url.startsWith("https://drive.google.com/uc?id=");
+    };
 
     useEffect(() => {
         checkNullData();
@@ -87,20 +131,41 @@ export default function Messages() {
         </div>
         <div className="message-panel-messages-content" >
             {messages && messages.map(item => (
-                <div key={item._id} className={handleClassName(item.sender_id)} >{item.content}</div>
+                <div key={item._id} className={handleClassName(item.sender_id)} >
+                    {isGoogleDriveImage(item.content) ? (
+                        <img src={item.content} alt="Sent Image" style={{ maxWidth: "300px", borderRadius: "8px" }} />
+                    ) : (
+                        item.content
+                    )}
+                </div>
             ))}
         </div>
         <div className="message-panel-messages-input">
-            <img src="/src/assets/icons8-img-30.png" alt="" />
+            <input
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            id="file-upload"
+            onChange={handleImageSeleted}
+            />
+
+            <label htmlFor="file-upload">
+                <img src="/src/assets/icons8-img-30.png" alt="" />
+            </label>
+
             <input 
                 type="text" 
                 value={messageInputValue}
                 onChange={(e)=> setMessageInputValue(e.target.value)} 
-                onKeyDown={(e)=> handleSendMessage(e)}
+                onKeyDown={(e)=> handleSendMessageAndImage(e)}
                 disabled={!contactUser}
             />
             <img src="/src/assets/icons8-smile-67.png" alt="" />
+
+            {image && <img src={URL.createObjectURL(image)} alt="Selected" className='message-panel-messages-input-preview-image' />}
+
         </div>
     </div>
   )
 }
+

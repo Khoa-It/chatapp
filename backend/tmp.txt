@@ -1,8 +1,10 @@
-const userIds = [2, 3]; // Mảng ID user
-User.find({ id: { $in: userIds } }) // Truy vấn lấy danh sách user có ID trong mảng
-  .then(users => {
-    console.log(users);
-  })
-  .catch(error => {
-    console.error(error);
-  });
+account {
+__v: 0
+_id: "67ac504efa88c4156b035024"
+avt: "https://example.com/images/jane_avatar.png"
+email: "jane.smith@example.com"
+id: 2
+password: "securepassword"
+username: "jane_smith"
+}
+

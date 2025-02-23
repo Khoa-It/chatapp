@@ -7,8 +7,8 @@ backend: ExpressJS (NodeJS)
 database: MongoDb
 
 ## UI
-### Chat page
-![chat app page](description/chatapp.png)
+### Chat page with message text and image
+![chat app page](description/image.png)
 ### Login page
 ![login page](description/login.png)
 ### Registration page

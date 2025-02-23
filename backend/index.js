@@ -3,7 +3,6 @@ const { configdb } = require('./configuration/database');
 const { userRouter } = require('./routes/User');
 const { friendshipRouter } = require('./routes/Friendship');
 const { messageRouter } = require('./routes/Message');
-const { listFiles } = require('./configuration/google_drive');
 const cors = require('cors');
 require('dotenv').config()
 const http = require('http');
